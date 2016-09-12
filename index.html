@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title> UMD-CMSC451 Algorithm Visualizer </title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <style media="screen">
+      * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+      }
+      html, body, .container {
+        width: 100%;
+        height: 100%;
+      }
+      .display {
+        width: 100%;
+        height: 100%;
+        background: #000;
+      }
+      .node {
+        fill: white;
+        color: black;
+      }
+      .node:hover {
+      }
+      .link {
+        stroke: green;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="js/graph.js" charset="utf-8"></script>
+    <script src="js/app.js" charset="utf-8"></script>
+    <div class="container" ng-app="AlgoSim" ng-controller="GraphController">
+      <svg ng-attr-width="{{width}}"
+           ng-attr-height="{{height}}" ng-click="addNewNode(); $event.stopPropagation();">
+        <line   ng-repeat="link in links"
+                class="link"
+                ng-drag-start
+                ng-attr-stroke-width="{{link.strokeWidth}}"
+                ng-attr-x1="{{link.source.x}}"
+                ng-attr-y1="{{link.source.y}}"
+                ng-attr-x2="{{link.target.x}}"
+                ng-attr-y2="{{link.target.y}}">
+        </line>
+        <circle ng-repeat="node in nodes"
+                class="node"
+                r="5"
+                ng-attr-fill="{{colorOfNodes}}"
+                ng-attr-cx="{{node.x}}"
+                ng-attr-cy="{{node.y}}">
+            <title>{{node.name}}</title>
+        </circle>
+      </svg>
+    </div>
+  </body>
+</html>
