@@ -70,7 +70,10 @@ App = (function() {
       .start();
 
     $scope.addNewNode = function() {
-
+      $scope.nodes.push({
+        "name":"J","group":1
+      });
+      force.start();
     }
 }
 
