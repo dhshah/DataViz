@@ -1,7 +1,7 @@
 App = (function() {
-  var graphController = function ($scope, $element, $timeout) {
+  var graphController = function ($scope, $element, $q) {
     var id  = 0;
-    var graph = new Graph();
+    var graph = new Graph($q);
     var range = d3.range(0, 10).map(function(d) { return String.fromCharCode('a'.charCodeAt() + d); } );
     graph.addNodes(range);
 

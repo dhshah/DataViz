@@ -4,13 +4,14 @@
  * A node is initialized with an id and has one default field called visted.
  */
 
-Graph = function() {
+Graph = function($q) {
+  this.deferred_ = $q.defer();
   this.nodes = [];
   this.links = [];
 }
 
 Graph.prototype.addNode = function(id) {
-  if (id && !this.hasNode(id)) {
+  if (id !== undefined && !this.hasNode(id)) {
     this.nodes.push({
       id: id,
       visited: false,
@@ -19,33 +20,25 @@ Graph.prototype.addNode = function(id) {
 }
 
 Graph.prototype.addNodes = function(ids) {
-  if (ids) {
-    for (var i = 0; i < ids.length; i++) {
-      this.addNode(ids[i]);
-    }
-  }
+  ids.forEach((id) => this.addNode(id));
 }
 
 Graph.prototype.hasNode = function(id) {
-  for (var i = 0; i < this.nodes.length; i++) {
-    if (this.nodes[i].id === id)
-      return true;
-  }
-  return false;
+  return (id !== undefined ? this.nodes.some((n) => { return n.id === id }) : false);
 }
 
 Graph.prototype.getNode = function (id) {
-  for (var i = 0; i < this.nodes.length; i++) {
+  for (var i = 0; i < this.nodes.length; i++)
     if (this.nodes[i].id === id)
       return this.nodes[i];
-  }
   return undefined;
 };
 
-Graph.prototype.addLink = function (id1, id2) {
-  if (id1 && id2 && id1 !== id2 && !this.hasLink(id1, id2)) {
-    var node1 = this.getNode(id1);
-    var node2 = this.getNode(id2);
+Graph.prototype.addLink = function (source, target) {
+  if (source !== undefined && target !== undefined && source !== target &&
+      !this.hasLink(source, target)) {
+    var node1 = this.getNode(source);
+    var node2 = this.getNode(target);
 
     this.links.push({
       source: node1,
@@ -57,48 +50,14 @@ Graph.prototype.addLink = function (id1, id2) {
 }
 
 Graph.prototype.addLinks = function (newLinks) {
-  for (var i = 0; i < newLinks.length; i++) {
-    this.addLink(newLinks[i][0], newLinks[i][1]);
-  }
+  newLinks.forEach((link) => this.addLink(link[0], link[1]));
 };
 
-Graph.prototype.hasLink = function (id1, id2) {
-  if (id1 && id2) {
-    for (var i = 0; i < this.links.length; i++ ) {
-      if (this.links[i].source.id == id1 && this.links[i].target.id == id2) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-/** GRAPH TAVERSAL HELPERS! */
-Graph.prototype.markVisited = function (id) {
-  if (id) {
-    var node = this.getNode(id);
-    if (node)
-      node.visited = true;
-  }
-}
-
-Graph.prototype.travel = function (from, to) {
-  if (from && to && this.hasLink(from, to)) {
-    this.getLink(from, to).traversed = true;
-    return true;
+Graph.prototype.hasLink = function (source, target) {
+  if (source !== undefined && target !== undefined) {
+    return this.links.some((l) => {
+      return l.source.id === source && l.target.id === target
+    });
   }
   return false;
-}
-
-Graph.prototype.followRandomUnvisitedLink = function (id) {
-  if (id) {
-    var links = this.getUnvisitedLinks(id);
-    if (links.length > 0) {
-      d3.shuffle(links);
-      links[0].traversed = true;
-      return links[0].target.id;
-    }
-  }
-  return undefined;
 }

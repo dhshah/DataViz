@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title> UMD-CMSC451 Algorithm Visualizer </title>
-
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/d3/d3.min.js"></script>
 
     <link rel="stylesheet" href="/css/master.css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
     <script src="js/helpers.js" charset="utf-8"></script>
     <script src="js/graph.js" charset="utf-8"></script>
+    <script src="js/graph_extensions.js" charset="utf-8"></script>
     <script src="js/app.js" charset="utf-8"></script>
     <div class="container" ng-app="AlgoSim" ng-controller="GraphController">
       <svg ng-attr-width="{{width}}"

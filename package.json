@@ -1,0 +1,27 @@
+{
+  "name": "algo-sim",
+  "version": "1.0.0",
+  "description": "A algorithm simulator (mostly graphs)",
+  "main": "index.html",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-mocks": "^1.5.8",
+    "jasmine": "^2.5.1",
+    "d3": "^3.5.17",
+    "jasmine-core": "^2.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhshah/DataViz.git"
+  },
+  "author": "dhshah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dhshah/DataViz/issues"
+  },
+  "homepage": "https://github.com/dhshah/DataViz#readme"
+}
