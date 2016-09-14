@@ -1,32 +1,16 @@
 App = (function() {
-  var graphController = function ($scope, $element) {
+  var graphController = function ($scope, $element, $timeout) {
+    var id  = 0;
+    var graph = new Graph();
+    var range = d3.range(0, 10).map(function(d) { return String.fromCharCode('a'.charCodeAt() + d); } );
+    graph.addNodes(range);
 
-      var nodes = [
-        {"name":"A","group":1},
-        {"name":"B","group":1},
-        {"name":"C","group":1},
-        {"name":"D","group":1},
-        {"name":"E","group":1},
-        {"name":"F","group":1},
-        {"name":"G","group":1},
-        {"name":"H","group":1},
-        {"name":"I","group":1}
-      ];
-
-      var links = [
-        {"source":0,"target":1,"value":2},
-        {"source":1,"target":2,"value":3},
-        {"source":0,"target":3,"value":4},
-        {"source":1,"target":4,"value":5},
-        {"source":2,"target":5,"value":4},
-        {"source":3,"target":4,"value":3},
-        {"source":4,"target":5,"value":2},
-        {"source":3,"target":6,"value":1},
-        {"source":4,"target":7,"value":2},
-        {"source":5,"target":8,"value":3},
-        {"source":6,"target":7,"value":4},
-        {"source":7,"target":8,"value":5}
-      ];
+    for (var i in d3.range(500)) {
+      range = d3.shuffle(range);
+      for (var i = 0; i < range.length - 1; i += 2) {
+        graph.addLink(range[i], range[i+1]);
+      }
+    }
 
     var paddingRight = 10;
     var paddingTop = 10;
@@ -49,9 +33,8 @@ App = (function() {
      * and the even ones are numbered.
      */
 
-
-    $scope.nodes = nodes || [];
-    $scope.links = links || [];
+    $scope.nodes = graph.nodes || [];
+    $scope.links = graph.links || [];
     $scope.rectGlobals = rectGlobals;
     $scope.width = canvasWidth;
     $scope.height = canvasHeight;
@@ -60,22 +43,24 @@ App = (function() {
       $scope.nodes[i].color = "red";
     }
 
+    $scope.visit = function(id) {
+      graph.markVisited(v);
+
+      function DFS () {
+
+      }
+      setTimeout(DFS, 150);
+    }
+
     var force = d3.layout.force()
       .charge(-120)
-      .linkDistance(function(d) { return d.value * 10; })
+      .linkDistance(250)//function(d) { return d.value * 10; })
       .size([canvasWidth, canvasHeight])
       .nodes($scope.nodes)
       .links($scope.links)
       .on("tick", function(){$scope.$apply()})
       .start();
-
-    $scope.addNewNode = function() {
-      $scope.nodes.push({
-        "name":"J","group":1
-      });
-      force.start();
-    }
-}
+  }
 
   var app = angular.module("AlgoSim", []);
   app.controller("GraphController", graphController);

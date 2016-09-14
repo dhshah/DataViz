@@ -1,3 +1,9 @@
+/*
+ * A graph is a collections of nodes and edges
+ * This, more specifically is an implementation of a directed graph.
+ * A node is initialized with an id and has one default field called visted.
+ */
+
 Graph = function() {
   this.nodes = [];
   this.links = [];
@@ -5,7 +11,10 @@ Graph = function() {
 
 Graph.prototype.addNode = function(id) {
   if (id && !this.hasNode(id)) {
-    this.nodes.push({id: id});
+    this.nodes.push({
+      id: id,
+      visited: false,
+    });
   }
 }
 
@@ -15,18 +24,6 @@ Graph.prototype.addNodes = function(ids) {
       this.addNode(ids[i]);
     }
   }
-}
-
-Graph.prototype.removeNode = function(id) {
-  if (id) {
-    for (var i = 0; i < this.nodes.length; i++) {
-      if (this.nodes[i].id === id) {
-        this.nodes.splice(i, 1);
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 Graph.prototype.hasNode = function(id) {
@@ -46,10 +43,15 @@ Graph.prototype.getNode = function (id) {
 };
 
 Graph.prototype.addLink = function (id1, id2) {
-  if (!this.hasLink(id1, id2)) {
+  if (id1 && id2 && id1 !== id2 && !this.hasLink(id1, id2)) {
+    var node1 = this.getNode(id1);
+    var node2 = this.getNode(id2);
+
     this.links.push({
-      source: id1,
-      target: id2
+      source: node1,
+      target: node2,
+      value: 1,
+      traversed: false
     });
   }
 }
@@ -60,26 +62,43 @@ Graph.prototype.addLinks = function (newLinks) {
   }
 };
 
-Graph.prototype.removeLink = function(id1, id2) {
+Graph.prototype.hasLink = function (id1, id2) {
   if (id1 && id2) {
     for (var i = 0; i < this.links.length; i++ ) {
       if (this.links[i].source.id == id1 && this.links[i].target.id == id2) {
-        this.links.splice(i, 1);
         return true;
       }
     }
+  }
+
+  return false;
+}
+
+/** GRAPH TAVERSAL HELPERS! */
+Graph.prototype.markVisited = function (id) {
+  if (id) {
+    var node = this.getNode(id);
+    if (node)
+      node.visited = true;
+  }
+}
+
+Graph.prototype.travel = function (from, to) {
+  if (from && to && this.hasLink(from, to)) {
+    this.getLink(from, to).traversed = true;
+    return true;
   }
   return false;
 }
 
-Graph.prototype.hasLink = function (id1, id2) {
-  if (id1 && id2) {
-    for (var i = 0; i < this.links.length; i++ ) {
-      if (this.links[i].source == id1 && this.links[i].target == id2) {
-        return true;
-      }
+Graph.prototype.followRandomUnvisitedLink = function (id) {
+  if (id) {
+    var links = this.getUnvisitedLinks(id);
+    if (links.length > 0) {
+      d3.shuffle(links);
+      links[0].traversed = true;
+      return links[0].target.id;
     }
   }
-
-  return false;
+  return undefined;
 }

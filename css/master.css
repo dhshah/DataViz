@@ -1,3 +1,22 @@
+/*
+  This is to make the text unselectable in a node
+  source: http://stackoverflow.com/questions/69430/is-there-a-way-to-make-text-unselectable-on-an-html-page
+  START
+*/
+*.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+/* END */
+
 * {
   margin: 0;
   padding: 0;
@@ -15,14 +34,28 @@ html, body, .container {
 }
 .node {
   fill: white;
-  stroke: black;
+  stroke: rgba(200, 0, 200, 0.5);
+  transition: stroke 0.25s;
+  transition: stroke-width 0.25s;
 }
-.node:hover {
+
+.node.active {
+  stroke: rgba(0, 200, 0, 0.5);
+  stroke-width: 3px;
 }
+
 .link {
-  stroke: green;
+  stroke: rgba(200, 0, 0, 0.5);
+  stroke-width: 2px;
+  marker-end: url(#mark-end-arrow);
+}
+
+.link.active {
+  stroke: rgba(0, 200, 0, 0.5);
+  stroke-width: 3px;
 }
 
 .nodename {
-  font-size: 10px;
+  font-size: 20px;
+  cursor: default;
 }

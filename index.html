@@ -10,13 +10,24 @@
     <link rel="stylesheet" href="/css/master.css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
+    <script src="js/helpers.js" charset="utf-8"></script>
     <script src="js/graph.js" charset="utf-8"></script>
     <script src="js/app.js" charset="utf-8"></script>
     <div class="container" ng-app="AlgoSim" ng-controller="GraphController">
       <svg ng-attr-width="{{width}}"
-           ng-attr-height="{{height}}" ng-click="addNewNode(); $event.stopPropagation();">
-        <line   ng-repeat="link in links"
+           ng-attr-height="{{height}}" ng-click="$event.stopPropagation();">
+        <defs>
+          <marker id="end-arrow" viewBox="0 -5 10 10" refX="32" markerWidth="3.5" markerHeight="3.5" orient="auto">
+            <path d="M0,-5L10,0L0,5"> </path>
+          </marker>
+          <marker id="mark-end-arrow" viewBox="0 -5 10 10" refX="7" markerWidth="3.5" markerHeight="3.5" orient="auto">
+            <path d="M0,-5L10,0L0,5"> </path>
+          </marker>
+        </defs>
+
+        <line ng-repeat="link in links"
                 class="link"
+                ng-class="{active:link.traversed}"
                 ng-drag-start
                 ng-attr-stroke-width="{{link.strokeWidth}}"
                 ng-attr-x1="{{link.source.x}}"
@@ -24,15 +35,17 @@
                 ng-attr-x2="{{link.target.x}}"
                 ng-attr-y2="{{link.target.y}}">
         </line>
-        <g ng-repeat="node in nodes" ng-attr-transform="translate({{node.x}},{{node.y}})">
+        <g ng-click="visit(node.id); $event.stopPropagation()"
+            ng-repeat="node in nodes"
+            ng-attr-transform="translate({{node.x}},{{node.y}})">
           <circle
-                class="node"
-                r="7"
-                ng-attr-fill="{{colorOfNodes}}">
+              class="node" ng-class="{active: node.visited}"
+              r="20"
+              ng-attr-fill="{{colorOfNodes}}">
           </circle>
-          <text class="nodename" fill="red" width="7" height="7"
-              text-anchor="middle" alignment-baseline="middle">
-          {{ node.name }}</text>
+          <text class="nodename unselectable" fill="red" width="7" height="7"
+              text-anchor="middle" alignment-baseline="central">
+          {{ node.id }}</text>
         </g>
       </svg>
     </div>
