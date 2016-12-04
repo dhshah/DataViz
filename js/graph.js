@@ -39,13 +39,14 @@ Graph.prototype.addLink = function (source, target) {
       !this.hasLink(source, target)) {
     var node1 = this.getNode(source);
     var node2 = this.getNode(target);
-
-    this.links.push({
-      source: node1,
-      target: node2,
-      value: 1,
-      traversed: false
-    });
+    if (node1 !== undefined && node2 != undefined) {
+      this.links.push({
+        source: node1,
+        target: node2,
+        value: 1,
+        traversed: false
+      });
+    }
   }
 }
 

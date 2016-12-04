@@ -32,27 +32,28 @@ html, body, .container {
   height: 100%;
   background: #000;
 }
+
 .node {
   fill: white;
-  stroke: rgba(200, 0, 200, 0.5);
-  transition: stroke 0.25s;
+  stroke: rgba(200, 0, 200, 1);
+  transition: fill 0.25s;
   transition: stroke-width 0.25s;
 }
 
 .node.active {
-  stroke: rgba(0, 200, 0, 0.5);
+  fill: rgba(0, 200, 0, 1);
   stroke-width: 3px;
 }
 
 .link {
-  stroke: rgba(200, 0, 0, 0.5);
+  stroke: rgba(200, 200, 200, 0.1);
   stroke-width: 2px;
   marker-end: url(#mark-end-arrow);
 }
 
 .link.active {
-  stroke: rgba(0, 200, 0, 0.5);
-  stroke-width: 3px;
+  stroke: rgba(0, 0, 0, 1);
+  stroke-width: 2px;
 }
 
 .nodename {

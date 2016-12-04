@@ -1,16 +1,20 @@
 App = (function() {
   var graphController = function ($scope, $element, $q) {
     var id  = 0;
-    var graph = new Graph($q);
-    var range = d3.range(0, 10).map(function(d) { return String.fromCharCode('a'.charCodeAt() + d); } );
-    graph.addNodes(range);
+    // var range = d3.range(7).map((d) => { return String.fromCharCode('a'.charCodeAt() + d); } );
+    // graph.addNodes(range);
+    //
+    // var DEFAULT_DELAY = 250; //ms
+    //
+    // for (var i in d3.range(500)) {
+    //   range = d3.shuffle(range);
+    //   for (var i = 0; i < range.length - 1; i += 2) {
+    //     if (!graph.hasLink(range[i+1], range[i]))
+    //       graph.addLink(range[i], range[i+1]);
+    //   }
+    // }
 
-    for (var i in d3.range(500)) {
-      range = d3.shuffle(range);
-      for (var i = 0; i < range.length - 1; i += 2) {
-        graph.addLink(range[i], range[i+1]);
-      }
-    }
+    var DEFAULT_DELAY = 250;
 
     var paddingRight = 10;
     var paddingTop = 10;
@@ -21,13 +25,17 @@ App = (function() {
     var canvasHeight = $element[0].offsetHeight - (paddingTop + paddingBottom);
 
     var rectGlobals = {
-      width: 10,
-      height: 10,
-    }
+      width: 100,
+      height: 100
+    };
 
-    var numRows = Math.round(canvasWidth / rectGlobals.width);
-    var numCols = Math.round(canvasHeight / rectGlobals.height);
+    var numRows = 14;
+    var numCols = 14;
 
+    console.log("here");
+    var graph = new Graph($q);
+    graph.createGridGraph(numRows, numCols);
+    console.log("here");
     /**
      * In this grid odd numbered cells are nodes in the graph
      * and the even ones are numbered.
@@ -44,22 +52,33 @@ App = (function() {
     }
 
     $scope.visit = function(id) {
-      graph.markVisited(v);
-
+      var stack = [id];
+      graph.markVisited(id);
       function DFS () {
-
+        var node = graph.followRandomUnvisitedLink(stack.peek());
+        if (node === undefined) {
+          stack.pop();
+          if (stack.length > 0){
+            setTimeout(DFS, 1);
+          }
+        }
+        else {
+          graph.markVisited(node);
+          stack.push(node);
+          if (stack.length > 0){
+            setTimeout(DFS, DEFAULT_DELAY);
+          }
+        }
+        $scope.$apply();
       }
-      setTimeout(DFS, 150);
+      setTimeout(DFS, DEFAULT_DELAY);
     }
 
-    var force = d3.layout.force()
-      .charge(-120)
-      .linkDistance(250)//function(d) { return d.value * 10; })
-      .size([canvasWidth, canvasHeight])
-      .nodes($scope.nodes)
-      .links($scope.links)
-      .on("tick", function(){$scope.$apply()})
-      .start();
+    var grid = d3.layout.grid()
+      .size([canvasWidth - 50, canvasHeight - 50]);
+
+    var nodes = d3.selectAll('.node')
+      .data(grid(graph.nodes));
   }
 
   var app = angular.module("AlgoSim", []);

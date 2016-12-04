@@ -5,6 +5,7 @@
     <title> UMD-CMSC451 Algorithm Visualizer </title>
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="node_modules/d3/d3.min.js"></script>
+    <script src="js/d3-grid.js"></script>
 
     <link rel="stylesheet" href="/css/master.css" media="screen" title="no title" charset="utf-8">
   </head>
@@ -20,24 +21,25 @@
           <marker id="end-arrow" viewBox="0 -5 10 10" refX="32" markerWidth="3.5" markerHeight="3.5" orient="auto">
             <path d="M0,-5L10,0L0,5"> </path>
           </marker>
-          <marker id="mark-end-arrow" viewBox="0 -5 10 10" refX="7" markerWidth="3.5" markerHeight="3.5" orient="auto">
+          <marker id="mark-end-arrow" viewBox="0 -5 10 10" refX="43" orient="auto">
             <path d="M0,-5L10,0L0,5"> </path>
           </marker>
         </defs>
 
         <line ng-repeat="link in links"
                 class="link"
+                marker-end="url(#mark-end-arrow)"
                 ng-class="{active:link.traversed}"
                 ng-drag-start
                 ng-attr-stroke-width="{{link.strokeWidth}}"
-                ng-attr-x1="{{link.source.x}}"
-                ng-attr-y1="{{link.source.y}}"
-                ng-attr-x2="{{link.target.x}}"
-                ng-attr-y2="{{link.target.y}}">
+                ng-attr-x1="{{link.source.x + 25}}"
+                ng-attr-y1="{{link.source.y + 25}}"
+                ng-attr-x2="{{link.target.x + 25}}"
+                ng-attr-y2="{{link.target.y + 25}}">
         </line>
         <g ng-click="visit(node.id); $event.stopPropagation()"
             ng-repeat="node in nodes"
-            ng-attr-transform="translate({{node.x}},{{node.y}})">
+            ng-attr-transform="translate({{node.x + 25}},{{node.y + 25}})">
           <circle
               class="node" ng-class="{active: node.visited}"
               r="20"
